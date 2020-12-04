@@ -76,6 +76,25 @@ public class DFFI extends BaseObject {
     }
 
     @Signature
+	public static Long getJFXHandle(Object window)
+	{
+		try {
+            Stage stage = (Stage) window;
+
+            TKStage tkStage = stage.impl_getPeer();
+            Method getPlatformWindow = tkStage.getClass().getDeclaredMethod("getPlatformWindow" );
+            getPlatformWindow.setAccessible(true);
+            Object platformWindow = getPlatformWindow.invoke(tkStage);
+            Method getNativeHandle = platformWindow.getClass().getMethod( "getNativeHandle" );
+            getNativeHandle.setAccessible(true);
+            Object nativeHandle = getNativeHandle.invoke(platformWindow);
+            return (Long) nativeHandle;
+        } catch (Throwable e) {
+            return null;
+        }
+	}
+    
+    @Signature
     public static void addSearchPath(String lib, String path) {
         NativeLibrary.addSearchPath(lib, path);
     }

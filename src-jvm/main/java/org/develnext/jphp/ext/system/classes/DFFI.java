@@ -10,6 +10,10 @@ import php.runtime.env.TraceInfo;
 import php.runtime.lang.BaseObject;
 import php.runtime.reflection.ClassEntity;
 
+import com.sun.javafx.tk.TKStage;
+import javafx.stage.Stage;
+import java.lang.reflect.Method;
+
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Map;

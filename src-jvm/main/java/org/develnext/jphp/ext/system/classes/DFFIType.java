@@ -20,7 +20,8 @@ public class DFFIType extends BaseObject {
 	public static final String WIDESTRING = "WSTRING";
 	public static final String STRUCT = "STRUCT";
 	public static final String REFERENCE = "REF";
-	
+	public static final String CHAR_ARRAY = "CHAR_ARRAY";
+
 	public DFFIType(Environment env, ClassEntity clazz) {
         super(env, clazz);
     }

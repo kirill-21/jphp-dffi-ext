@@ -33,39 +33,51 @@ public class Helper {
     }
 
     public static Object ConvertMemoryToObject(Environment env, String valueType, Memory value) {
+        //logger.println(String.format("CONVERT MEMORY TO OBJECT: %s %s", valueType, value.toString()));
+
         Object returnValue = null;
+
         switch (valueType) {
-            case "BOOL":
+            case DFFIType.BOOL:
                 returnValue = Boolean.valueOf(value.toBoolean());
                 break;
-            case "INT":
+
+            case DFFIType.INT:
                 returnValue = Integer.valueOf(value.toInteger());
                 break;
-            case "LONG":
+
+            case DFFIType.LONG:
                 returnValue = Long.valueOf(value.toLong());
                 break;
-            case "CHAR":
-                returnValue = Character.valueOf(value.toString().charAt(0));
+
+            case DFFIType.CHAR:
+                returnValue = value;
                 break;
-            case "DOUBLE":
+
+            case DFFIType.DOUBLE:
                 returnValue = Double.valueOf(value.toDouble());
                 break;
-            case "FLOAT":
+
+            case DFFIType.FLOAT:
                 returnValue = Float.valueOf(value.toFloat());
                 break;
-            case "STRING":
+
+            case DFFIType.STRING:
                 returnValue = value.toString();
                 break;
-            case "WSTRING":
+
+            case DFFIType.WIDESTRING:
                 returnValue = new WString(value.toString());
                 break;
-            case "STRUCT":
-                Structure struct = ((DFFIStruct) value.toObject(DFFIStruct.class)).struct;
+
+            case DFFIType.STRUCT:
+                Structure struct = value.toObject(DFFIStruct.class).struct;
                 returnValue = struct;
                 break;
-            case "REF": {
+
+            case DFFIType.REFERENCE: {
                 Object reference = null;
-                DFFIReferenceValue _obj = ((DFFIReferenceValue) value.toObject(DFFIReferenceValue.class));
+                DFFIReferenceValue _obj = value.toObject(DFFIReferenceValue.class);
 
                 if (_obj.isReference()) {
                     reference = _obj.refval;
@@ -76,7 +88,12 @@ public class Helper {
                 returnValue = reference;
                 break;
             }
+
+            case DFFIType.CHAR_ARRAY:
+                returnValue = new char[value.toInteger()];
+                break;
         }
+
         return returnValue;
     }
 
@@ -99,6 +116,7 @@ public class Helper {
         Class c = Class.class;
 
         String cls_up = cls.toUpperCase();
+
         switch (cls_up) {
             case "INT":
                 c = int.class;
@@ -127,6 +145,8 @@ public class Helper {
             case "POINTER":
                 c = Pointer.class;
                 break;
+            case "CHAR[]":
+                c = char[].class;
         }
 
         return c;
@@ -151,6 +171,8 @@ public class Helper {
             returnValue = new DoubleMemory((double) value);
         } else if (type == String.class) {
             returnValue = new StringMemory((String) value);
+        }else if (type == char[].class || type == Character[].class) {
+            returnValue = new StringMemory(Native.toString((char[]) value));
         }
 
         return returnValue;

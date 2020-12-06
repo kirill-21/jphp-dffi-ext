@@ -18,5 +18,6 @@ class DFFIType
 	const STRING = "STRING";
 	const WIDESTRING = "WSTRING";
 	const STRUCT = "STRUCT";
-	const REFERENCE = "REF";
+    const REFERENCE = "REF";
+    const CHAR_ARRAY = "CHAR[]";
 }

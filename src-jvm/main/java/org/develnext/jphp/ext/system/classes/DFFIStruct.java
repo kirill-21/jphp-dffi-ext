@@ -74,7 +74,7 @@ public class DFFIStruct extends BaseObject {
             return ordered;
         }
     }
-    
+
     public static Structure allocate(final String name, Class... classes) {
         try {
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -122,6 +122,7 @@ public class DFFIStruct extends BaseObject {
                 // Random name
                 fie.writeShort(utf(con, idx, UUID.randomUUID().toString()));
                 HashMap<String, String> typeMap = new HashMap<>();
+
                 typeMap.put("int", "I");
                 typeMap.put("boolean", "Z");
                 typeMap.put("byte", "B");
@@ -131,9 +132,14 @@ public class DFFIStruct extends BaseObject {
                 typeMap.put("float", "F");
                 typeMap.put("long", "J");
 
+                typeMap.put("[C", "[C");
+                typeMap.put("[B", "[B");
+
                 String descriptor = typeMap.get(d.getName());
+
                 if (descriptor == null)
                     descriptor = String.format("L%s;", d.getName().replace(".", "/"));
+
                 fie.writeShort(utf(con, idx, descriptor));
                 fie.writeShort(0); // No attributes
             }
@@ -150,11 +156,18 @@ public class DFFIStruct extends BaseObject {
             dos.write(methods.toByteArray());
             dos.writeShort(0); // No attributes
 
-            return (Structure) new ClassLoader() {
+
+
+            final Object structure = new ClassLoader() {
                 public Class defineClass(byte[] bytes) {
                     return super.defineClass(name, bytes, 0, bytes.length);
                 }
             }.defineClass(baos.toByteArray()).newInstance();
+
+
+            //logger.println(Dumper.dump(structure));
+
+            return (Structure) structure;
         } catch (IOException | ReflectiveOperationException e) {
             return null;
         }

@@ -27,5 +27,7 @@ public class DFFIExtension extends Extension
     registerClass(scope, DFFIStruct.class);
     registerClass(scope, DFFIReferenceValue.class);
     registerClass(scope, DFFIConsole.class);
+
+    registerClass(scope, DFFIKernel32.class);
   }
 }

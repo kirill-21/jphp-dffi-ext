@@ -11,9 +11,9 @@ class DFFIStruct
 	/**
 	 * DFFIStruct constructor.
      * @param string $name
-     * @param string $array
+     * @param string[] $types
      */
-    public function __construct($name, $array)
+    public function __construct($name, $types)
     {
     }
 	
@@ -28,7 +28,7 @@ class DFFIStruct
     }
 
     /**
-     * @return any
+     * @return mixed
      */
     public function getResponse()
     {

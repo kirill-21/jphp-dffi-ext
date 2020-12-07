@@ -37,7 +37,7 @@ public class DFFIKernel32 extends BaseObject {
     private static JnaMemory toJnaMemory(final Object value) {
 
         if (value instanceof Integer || value instanceof Long) {
-            return new JnaMemory((int) value);
+            return new JnaMemory( ((Long)value).intValue() );
         }
 
         if (value instanceof String)

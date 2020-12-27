@@ -1,6 +1,7 @@
 package org.develnext.jphp.ext.system.classes;
 
 import com.sun.jna.Native;
+import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.platform.win32.Tlhelp32;
 import org.develnext.jphp.ext.system.DFFIExtension;
@@ -68,12 +69,12 @@ public class DFFIStruct extends BaseObject {
             fieldsArray.add(moduleEntry32W.ProccntUsage.intValue());
 
             System.out.println("Converting modBaseAddr to int");
-            fieldsArray.add(moduleEntry32W.modBaseAddr.getInt(0));
+            fieldsArray.add(Pointer.nativeValue(moduleEntry32W.modBaseAddr));
 
             fieldsArray.add(moduleEntry32W.modBaseSize.intValue());
 
             System.out.println("Converting hModule to int");
-            fieldsArray.add(moduleEntry32W.hModule.getPointer().getInt(0));
+            fieldsArray.add(Pointer.nativeValue(moduleEntry32W.hModule.getPointer()));
 
             System.out.println("Converting szModule && szExePath to string");
 

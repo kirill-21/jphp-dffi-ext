@@ -1,5 +1,5 @@
 name: jphp-dffi-ext
-version: 2.0.11
+version: 2.0.12
 description: DevelNext Foreign Function Interface
 
 plugins:

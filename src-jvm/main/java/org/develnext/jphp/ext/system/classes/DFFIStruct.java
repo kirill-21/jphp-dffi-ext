@@ -1,5 +1,6 @@
 package org.develnext.jphp.ext.system.classes;
 
+import com.sun.jna.Native;
 import com.sun.jna.Structure;
 import com.sun.jna.platform.win32.Tlhelp32;
 import org.develnext.jphp.ext.system.DFFIExtension;
@@ -53,14 +54,41 @@ public class DFFIStruct extends BaseObject {
 
     @Reflection.Signature
     public ArrayMemory getResponse() throws IllegalAccessException {
-        ArrayMemory fieldsArray = new ArrayMemory();
-        Field[] fields = this.struct.getClass().getDeclaredFields();
+        final ArrayMemory fieldsArray = new ArrayMemory();
 
-        for (Field itm : fields) {
-            Object value = itm.get(this.struct);
-            fieldsArray.add(Helper.ConvertObjectToMemory(value.getClass(), value));
+        if (this.struct instanceof Tlhelp32.MODULEENTRY32W) {
+            System.out.println("Decoding MODULEENTRY32W structure...");
+
+            final Tlhelp32.MODULEENTRY32W moduleEntry32W = ((Tlhelp32.MODULEENTRY32W) this.struct);
+
+            fieldsArray.add(moduleEntry32W.dwSize.intValue());
+            fieldsArray.add(moduleEntry32W.th32ModuleID.intValue());
+            fieldsArray.add(moduleEntry32W.th32ProcessID.intValue());
+            fieldsArray.add(moduleEntry32W.GlblcntUsage.intValue());
+            fieldsArray.add(moduleEntry32W.ProccntUsage.intValue());
+
+            System.out.println("Converting modBaseAddr to int");
+            fieldsArray.add(moduleEntry32W.modBaseAddr.getInt(0));
+
+            fieldsArray.add(moduleEntry32W.modBaseSize.intValue());
+
+            System.out.println("Converting hModule to int");
+            fieldsArray.add(moduleEntry32W.hModule.getPointer().getInt(0));
+
+            System.out.println("Converting szModule && szExePath to string");
+
+            fieldsArray.add(Native.toString(moduleEntry32W.szModule));
+            fieldsArray.add(Native.toString(moduleEntry32W.szExePath));
+
+        } else {
+            Field[] fields = this.struct.getClass().getDeclaredFields();
+
+            for (Field itm : fields) {
+                Object value = itm.get(this.struct);
+                fieldsArray.add(Helper.ConvertObjectToMemory(value.getClass(), value));
+            }
         }
-        
+
         return fieldsArray;
     }
 

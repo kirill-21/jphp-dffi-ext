@@ -1,4 +1,5 @@
 <?php
+
 namespace system;
 
 /**
@@ -9,9 +10,51 @@ namespace system;
 class DFFIKernel32
 {
     /**
+     * @param bool $isNtEnabled
+     * @return void
+     */
+    public static function setIsNtEnabled(bool $isNtEnabled)
+    {
+    }
+
+    /**
+     * @param int $hProcess
+     * @param int $lpBaseAddress
+     * @param int $value
      * @return bool
      */
-    public static function writeMemoryValue($hProcess, $lpBaseAddress, $value): bool
+    public static function writeMemoryInt(int $hProcess, int $lpBaseAddress, int $value): bool
+    {
+    }
+
+    /**
+     * @param int $hProcess
+     * @param int $lpBaseAddress
+     * @param int $value
+     * @return bool
+     */
+    public static function writeMemoryLong(int $hProcess, int $lpBaseAddress, int $value): bool
+    {
+    }
+
+    /**
+     * @param int $hProcess
+     * @param int $lpBaseAddress
+     * @param string $value
+     * @return bool
+     */
+    public static function writeMemoryString(int $hProcess, int $lpBaseAddress, string $value): bool
+    {
+    }
+
+    /**
+     * @param int $hProcess
+     * @param int $lpBaseAddress
+     * @param $value
+     * @return bool
+     * @deprecated
+     */
+    public static function writeMemoryValue(int $hProcess, int $lpBaseAddress, $value): bool
     {
     }
 }

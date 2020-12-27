@@ -18,6 +18,12 @@ class DFFIKernel32
     }
 
     /**
+     * @return int
+     */
+    public static function getModuleEntry32WSize(): int {
+    }
+
+    /**
      * @param int $hProcess
      * @param int $lpBaseAddress
      * @param int $value

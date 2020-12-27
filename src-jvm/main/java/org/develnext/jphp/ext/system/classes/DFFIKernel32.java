@@ -2,6 +2,7 @@ package org.develnext.jphp.ext.system.classes;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.platform.win32.Kernel32;
+import com.sun.jna.platform.win32.Tlhelp32;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinNT;
 import org.develnext.jphp.ext.system.DFFIExtension;
@@ -12,6 +13,7 @@ import php.runtime.annotation.Reflection.Namespace;
 import php.runtime.annotation.Reflection.Signature;
 import php.runtime.env.Environment;
 import php.runtime.lang.BaseObject;
+import php.runtime.memory.LongMemory;
 import php.runtime.reflection.ClassEntity;
 
 @Namespace(DFFIExtension.NS)
@@ -43,6 +45,12 @@ public class DFFIKernel32 extends BaseObject {
     }
 
     @Signature
+    public static Memory getModuleEntry32WSize() {
+        final long size = new Tlhelp32.MODULEENTRY32W().dwSize.longValue();
+        return new LongMemory(size);
+    }
+
+    @Signature
     @Deprecated
     public static Memory writeMemoryValue(final int hProcess, final int lpBaseAddress, final Object value) {
         return writeMemoryValue(hProcess, lpBaseAddress, toJnaMemory(value));
@@ -52,11 +60,17 @@ public class DFFIKernel32 extends BaseObject {
         final WinNT.HANDLE hProcessHandle = new WinNT.HANDLE(new Pointer(hProcess));
         final Pointer lpBaseAddressPointer = new Pointer(lpBaseAddress);
 
-        if (isNtEnabled && NtdllDLL.INSTANCE.NtWriteVirtualMemory(hProcessHandle, new WinDef.PVOID(lpBaseAddressPointer), lpBufferPointer, new WinDef.ULONG(lpBufferPointer.size()), null).longValue() != 0)
+        if (isNtEnabled && NtdllDLL.INSTANCE.NtWriteVirtualMemory(hProcessHandle, new WinDef.PVOID(lpBaseAddressPointer), lpBufferPointer, new WinDef.ULONG(lpBufferPointer.size()), null).longValue() != 0) {
+            System.out.println("WRITTEN USING NtdllDLL!");
             return Memory.TRUE;
+        }
 
-        if (Kernel32.INSTANCE.WriteProcessMemory(hProcessHandle, lpBaseAddressPointer, lpBufferPointer, (int) lpBufferPointer.size(), null))
+        else if (Kernel32.INSTANCE.WriteProcessMemory(hProcessHandle, lpBaseAddressPointer, lpBufferPointer, (int) lpBufferPointer.size(), null)) {
+            System.out.println("WRITTEN USING Kernel32!");
             return Memory.TRUE;
+        }
+
+        System.out.println("Cannot write value :c");
 
         return Memory.FALSE;
     }

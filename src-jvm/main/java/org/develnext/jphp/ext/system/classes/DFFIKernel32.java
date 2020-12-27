@@ -61,16 +61,12 @@ public class DFFIKernel32 extends BaseObject {
         final Pointer lpBaseAddressPointer = new Pointer(lpBaseAddress);
 
         if (isNtEnabled && NtdllDLL.INSTANCE.NtWriteVirtualMemory(hProcessHandle, new WinDef.PVOID(lpBaseAddressPointer), lpBufferPointer, new WinDef.ULONG(lpBufferPointer.size()), null).longValue() != 0) {
-            System.out.println("WRITTEN USING NtdllDLL!");
             return Memory.TRUE;
         }
 
         else if (Kernel32.INSTANCE.WriteProcessMemory(hProcessHandle, lpBaseAddressPointer, lpBufferPointer, (int) lpBufferPointer.size(), null)) {
-            System.out.println("WRITTEN USING Kernel32!");
             return Memory.TRUE;
         }
-
-        System.out.println("Cannot write value :c");
 
         return Memory.FALSE;
     }
@@ -81,8 +77,6 @@ public class DFFIKernel32 extends BaseObject {
 
         if (value instanceof String)
             return JnaMemory.fromString((String) value);
-
-        System.out.printf("Cannot find appropriate cast for %s%n", value);
 
         return null;
     }

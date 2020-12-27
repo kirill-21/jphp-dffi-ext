@@ -163,7 +163,6 @@ public class Helper {
                 returnValue = Memory.FALSE;
             }
         } else if (type == Pointer.class) {
-            System.out.println("cast Pointer to long");
             returnValue = new LongMemory(((Pointer) value).getLong(0));
         } else if (type == int.class || type == Integer.class) {
             returnValue = new LongMemory((int) value);

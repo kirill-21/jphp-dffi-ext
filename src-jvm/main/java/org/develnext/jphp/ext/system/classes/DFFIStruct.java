@@ -58,8 +58,6 @@ public class DFFIStruct extends BaseObject {
         final ArrayMemory fieldsArray = new ArrayMemory();
 
         if (this.struct instanceof Tlhelp32.MODULEENTRY32W) {
-            System.out.println("Decoding MODULEENTRY32W structure...");
-
             final Tlhelp32.MODULEENTRY32W moduleEntry32W = ((Tlhelp32.MODULEENTRY32W) this.struct);
 
             fieldsArray.add(moduleEntry32W.dwSize.intValue());
@@ -68,15 +66,11 @@ public class DFFIStruct extends BaseObject {
             fieldsArray.add(moduleEntry32W.GlblcntUsage.intValue());
             fieldsArray.add(moduleEntry32W.ProccntUsage.intValue());
 
-            System.out.println("Converting modBaseAddr to int");
             fieldsArray.add(Pointer.nativeValue(moduleEntry32W.modBaseAddr));
 
             fieldsArray.add(moduleEntry32W.modBaseSize.intValue());
 
-            System.out.println("Converting hModule to int");
             fieldsArray.add(Pointer.nativeValue(moduleEntry32W.hModule.getPointer()));
-
-            System.out.println("Converting szModule && szExePath to string");
 
             fieldsArray.add(Native.toString(moduleEntry32W.szModule));
             fieldsArray.add(Native.toString(moduleEntry32W.szExePath));

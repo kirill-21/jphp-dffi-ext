@@ -40,10 +40,8 @@ public class DFFIStruct extends BaseObject {
     public void __construct(Environment env, String name, ArrayMemory types) throws ClassNotFoundException {
         Class[] classes = Helper.ConvertJavaClassByType(env, types);
 
-        if (name.equals("MODULEENTRY32W")) {
-            System.out.println("MODULEENTRY32W");
+        if (name.equals("MODULEENTRY32W"))
             this.struct = new Tlhelp32.MODULEENTRY32W();
-        }
         else
             this.struct = createStructure(name, classes);
     }

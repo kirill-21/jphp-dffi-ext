@@ -55,10 +55,12 @@ public class DFFIStruct extends BaseObject {
     public ArrayMemory getResponse() throws IllegalAccessException {
         ArrayMemory fieldsArray = new ArrayMemory();
         Field[] fields = this.struct.getClass().getDeclaredFields();
+
         for (Field itm : fields) {
             Object value = itm.get(this.struct);
             fieldsArray.add(Helper.ConvertObjectToMemory(value.getClass(), value));
         }
+        
         return fieldsArray;
     }
 

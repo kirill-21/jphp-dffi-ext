@@ -1,16 +1,17 @@
 package org.develnext.jphp.ext.system.classes;
 
-import php.runtime.Memory;
-import php.runtime.env.Environment;
-import php.runtime.memory.*;
-import php.runtime.lang.ForeachIterator;
-
-import java.lang.reflect.Array;
-
 import com.sun.jna.*;
 import com.sun.jna.ptr.*;
+import php.runtime.Memory;
+import php.runtime.env.Environment;
+import php.runtime.lang.ForeachIterator;
+import php.runtime.memory.ArrayMemory;
+import php.runtime.memory.DoubleMemory;
+import php.runtime.memory.LongMemory;
+import php.runtime.memory.StringMemory;
 
-import java.util.*;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class Helper {
     public static Memory callFunction(Environment env, String lib, String returnType, String functionName, Memory types, Memory[] args)
@@ -161,7 +162,10 @@ public class Helper {
             } else {
                 returnValue = Memory.FALSE;
             }
-        } else if (type == int.class || type == Integer.class || type == Pointer.class) {
+        } else if (type == Pointer.class) {
+            System.out.println("cast Pointer to long");
+            returnValue = new LongMemory(((Pointer) value).getLong(0));
+        } else if (type == int.class || type == Integer.class) {
             returnValue = new LongMemory((int) value);
         } else if (type == long.class || type == Long.class) {
             returnValue = new LongMemory((long) value);
@@ -171,7 +175,7 @@ public class Helper {
             returnValue = new DoubleMemory((double) value);
         } else if (type == String.class) {
             returnValue = new StringMemory((String) value);
-        }else if (type == char[].class || type == Character[].class) {
+        } else if (type == char[].class || type == Character[].class) {
             returnValue = new StringMemory(Native.toString((char[]) value));
         }
 

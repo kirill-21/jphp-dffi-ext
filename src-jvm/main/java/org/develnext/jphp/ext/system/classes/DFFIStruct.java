@@ -1,70 +1,74 @@
 package org.develnext.jphp.ext.system.classes;
 
-import php.runtime.Memory;
+import com.sun.jna.Structure;
+import com.sun.jna.platform.win32.Tlhelp32;
 import org.develnext.jphp.ext.system.DFFIExtension;
+import php.runtime.Memory;
 import php.runtime.annotation.Reflection;
 import php.runtime.annotation.Reflection.Signature;
 import php.runtime.env.Environment;
 import php.runtime.env.TraceInfo;
 import php.runtime.lang.BaseObject;
-import php.runtime.reflection.ClassEntity;
 import php.runtime.memory.ArrayMemory;
+import php.runtime.reflection.ClassEntity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.sun.jna.*;
-import java.util.*;
 
 @Reflection.Name("DFFIStruct")
 @Reflection.Namespace(DFFIExtension.NS)
 public class DFFIStruct extends BaseObject {
-	
-	public Structure struct;
+
+    public Structure struct;
 
     public DFFIStruct(Environment env, ClassEntity clazz) {
         super(env, clazz);
     }
-	
-	public DFFIStruct(Environment env, Structure _struct)
-    {
-		super(env);
-		this.struct = _struct;
+
+    public DFFIStruct(Environment env, Structure _struct) {
+        super(env);
+        this.struct = _struct;
     }
 
-	@Signature
+    @Signature
     public void __construct(Environment env, String name, ArrayMemory types) throws ClassNotFoundException {
-		Class[] classes = Helper.ConvertJavaClassByType(env, types);
-		this.struct = createStructure(name, classes);
+        Class[] classes = Helper.ConvertJavaClassByType(env, types);
+
+        if (name.equals("MODULEENTRY32W")) {
+            System.out.println("MODULEENTRY32W");
+            this.struct = new Tlhelp32.MODULEENTRY32W();
+        }
+        else
+            this.struct = createStructure(name, classes);
     }
 
     @Reflection.Signature
-	public void setValue(Environment env, TraceInfo trace, int index, String valueType, Memory value) throws IllegalAccessException
-	{
-		this.struct.getClass().getDeclaredFields()[index].set(this.struct, Helper.ConvertMemoryToObject(env, valueType, value));
-	}
-  
-    @Reflection.Signature
-    public ArrayMemory getResponse() throws IllegalAccessException
-    {
-		ArrayMemory fieldsArray = new ArrayMemory();
-		Field[] fields = this.struct.getClass().getDeclaredFields();
-		for (Field itm : fields)
-		{
-		  Object value = itm.get(this.struct);
-		  fieldsArray.add(Helper.ConvertObjectToMemory(value.getClass(), value));
-		}
-		return fieldsArray;
+    public void setValue(Environment env, TraceInfo trace, int index, String valueType, Memory value) throws IllegalAccessException {
+        this.struct.getClass().getDeclaredFields()[index].set(this.struct, Helper.ConvertMemoryToObject(env, valueType, value));
     }
-	
-	public static Structure createStructure(String className, Class[] classes){
+
+    @Reflection.Signature
+    public ArrayMemory getResponse() throws IllegalAccessException {
+        ArrayMemory fieldsArray = new ArrayMemory();
+        Field[] fields = this.struct.getClass().getDeclaredFields();
+        for (Field itm : fields) {
+            Object value = itm.get(this.struct);
+            fieldsArray.add(Helper.ConvertObjectToMemory(value.getClass(), value));
+        }
+        return fieldsArray;
+    }
+
+    public static Structure createStructure(String className, Class[] classes) {
         return allocate(className, classes);
-	}
-	
-	public static class AutoStructure extends Structure {
+    }
+
+    public static class AutoStructure extends Structure {
         @Override
         protected java.util.List getFieldOrder() {
             Field[] declared = getClass().getDeclaredFields();
@@ -157,7 +161,6 @@ public class DFFIStruct extends BaseObject {
             dos.writeShort(0); // No attributes
 
 
-
             final Object structure = new ClassLoader() {
                 public Class defineClass(byte[] bytes) {
                     return super.defineClass(name, bytes, 0, bytes.length);
@@ -203,5 +206,5 @@ public class DFFIStruct extends BaseObject {
         out.writeShort(descIdx);
         return size.addAndGet(1);
     }
-	
+
 }

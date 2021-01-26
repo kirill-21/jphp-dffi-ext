@@ -26,5 +26,6 @@ public class DFFIExtension extends Extension {
         registerClass(scope, DFFIConsole.class);
 
         registerClass(scope, DFFIKernel32.class);
+        registerClass(scope, DFFIUser32.class);
     }
 }

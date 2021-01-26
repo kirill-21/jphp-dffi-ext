@@ -1,11 +1,11 @@
 name: jphp-dffi-ext
-version: 2.0.14
+version: 2.0.15
 description: DevelNext Foreign Function Interface
 
 plugins:
-- Hub
-- Gradle
-- Doc
+  - Hub
+  - Gradle
+  - Doc
 
 deps:
   jphp-runtime: '*'
@@ -16,21 +16,21 @@ ide-bundle: # for DN 17+
   class: develnext\bundle\dffi\DFFIBundle
   icon: develnext/bundle/dffi/icon32.png
   description: DevelNext Foreign Function Interface.
-  platforms: [desktop]
+  platforms: [ desktop ]
   group: system
   #sources: ['src']
-  
+
 sources:
-- src
+  - src
 
 gradle:
   deps:
-  - 'net.java.dev.jna:jna-platform:5.5.0'
+    - 'net.java.dev.jna:jna-platform:5.5.0'
 
 config:
   ignore:
-  - /.git/**
-  - /.idea/**
-  - /*.iml
-  - /bundle/**
-  - /package.hub.yml
+    - /.git/**
+    - /.idea/**
+    - /*.iml
+    - /bundle/**
+    - /package.hub.yml

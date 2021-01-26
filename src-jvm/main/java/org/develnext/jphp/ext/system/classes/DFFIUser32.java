@@ -46,8 +46,6 @@ public class DFFIUser32 extends BaseObject {
             User32.INSTANCE.SendInput(new WinDef.DWORD(1), (WinUser.INPUT[]) input.toArray(1), input.size());
         }
 
-        System.out.println("OK!");
-
-        return Memory.FALSE;
+        return Memory.TRUE;
     }
 }
